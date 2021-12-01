@@ -16,9 +16,10 @@ module.exports = class DepthAnalyzer {
     parseData(filename) {
         const path = require('path');
         const fs = require('fs');
+        const os = require('os');
 
         const data = fs.readFileSync(path.resolve(__dirname, filename), 'utf-8');
-        const stringArray = data.split('\r\n');
+        const stringArray = data.split(os.EOL);
         this.depthArray = stringArray.map(function(item) {
             return parseInt(item, 10);
         });
