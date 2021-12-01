@@ -1,6 +1,6 @@
 'use strict';
 
-export default class DepthAnalyzer {
+module.exports = class DepthAnalyzer {
     constructor(useTestData) {
         this.initialize(useTestData);
     }
@@ -18,12 +18,24 @@ export default class DepthAnalyzer {
         const fs = require('fs');
 
         const data = fs.readFileSync(path.resolve(__dirname, filename), 'utf-8');
-        const stringArray = data.split('\r\n\r\n');
+        const stringArray = data.split('\r\n');
         this.depthArray = stringArray.map(function(item) {
             return parseInt(item, 10);
-
         });
     }
 
+    runDepthScan() {
+        let numberOfDepthIncreases = 0;
+        for (let i = 0; i < this.depthArray.length - 1; i++) {
+            if (this.depthArray[i] < this.depthArray[i+1]) {
+                numberOfDepthIncreases++;
+            }
+        }
+        this.numberOfDepthIncreases = numberOfDepthIncreases;
+    }
 
-}
+    getNumberOfDepthIncreases() {
+        return this.numberOfDepthIncreases;
+    }
+
+};
