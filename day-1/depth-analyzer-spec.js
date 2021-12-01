@@ -21,6 +21,13 @@ describe('DepthAnalyzer', function () {
             expect(numberOfDepthIncreases).toBe(7);
         });
 
+        it('should produce the correct number of sliding window depth increases', function () {
+            const depthAnalyzer = new DepthAnalyzer(true);
+            depthAnalyzer.runDepthScan();
+            const numberOfSlidingWindowDepthIncreases = depthAnalyzer.getNumberOfSlidingWindowDepthIncreases();
+            expect(numberOfSlidingWindowDepthIncreases).toBe(5);
+        });
+
     });
 
 });
