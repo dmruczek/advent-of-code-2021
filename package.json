@@ -1,0 +1,26 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "description": "https://adventofcode.com/2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine",
+    "coverage": "nyc --exclude='**/*-spec.js'  --reporter=lcov --reporter=text-summary npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmruczek/advent-of-code-2021.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmruczek/advent-of-code-2021/issues"
+  },
+  "homepage": "https://github.com/dmruczek/advent-of-code-2021#readme",
+  "devDependencies": {
+    "jasmine": "^3.6.3",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {}
+}
