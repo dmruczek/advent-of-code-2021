@@ -28,4 +28,28 @@ describe('DiagnosticAnalyzer', function () {
         });
     });
 
+    describe('findOxygenGeneratorRating', function() {
+        it('should properly find the Oxygen Generator Rating', function () {
+            const diagnosticAnalyzer = new DiagnosticAnalyzer();
+            diagnosticAnalyzer.loadInput('test-input.txt');
+            expect(diagnosticAnalyzer.findOxygenGeneratorRating()).toEqual('10111');
+        });
+    });
+
+    describe('findCO2ScrubberRating', function() {
+        it('should properly find the CO2 Scrubber Rating', function () {
+            const diagnosticAnalyzer = new DiagnosticAnalyzer();
+            diagnosticAnalyzer.loadInput('test-input.txt');
+            expect(diagnosticAnalyzer.findCO2ScrubberRating()).toEqual('01010');
+        });
+    });
+
+    describe('calculateLifeSupportRating', function() {
+        it('should properly Calculate the Life Support Rating', function () {
+            const diagnosticAnalyzer = new DiagnosticAnalyzer();
+            diagnosticAnalyzer.loadInput('test-input.txt');
+            expect(diagnosticAnalyzer.calculateLifeSupportRating()).toEqual(230);
+        });
+    });
+    
 });
