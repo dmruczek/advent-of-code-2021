@@ -25,8 +25,36 @@ module.exports = class BingoGame {
             bingoCards.push(new BingoCard(lines.slice(i, i+5)));
         }
         this.bingoCards = bingoCards;
-
     }
 
+    runGameUntilWinnerFound() {
+        this.numberIndex = 0;
+
+        for (let i = 0; i < this.numbersToCall.length; i++) {
+
+            const winningCardIndex = this.callNumberAndCheckForWinner(this.numbersToCall[i]);
+            if (winningCardIndex >= 0) {
+                this.winningCardIndex = winningCardIndex;
+                return;
+            }
+        }
+    }
+
+    callNumberAndCheckForWinner(number) {
+        for (let i = 0; i < this.bingoCards.length; i++) {
+            const numberFound = this.bingoCards[i].markNumber(number);
+            if (numberFound) {
+                if (this.bingoCards[i].checkForWinner()) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    getScoreOfWinningCard() {
+        return this.bingoCards[this.winningCardIndex].calculateScoreOfCard();
+    }
 
 };

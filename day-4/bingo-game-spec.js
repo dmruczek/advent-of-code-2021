@@ -16,7 +16,17 @@ describe('BingoGame', function () {
                 [1, 12, 20, 15, 19]
             ]);
         });
-        
     });
+
+    describe('runGameUntilWinnerFound', function() {
+        it('should run the bingo game until a winner is found and a score can be calculated.', function () {
+            const bingoGame = new BingoGame();
+            bingoGame.loadInput('test-input.txt');
+            bingoGame.runGameUntilWinnerFound();
+            expect(bingoGame.winningCardIndex).toBe(2);
+            expect(bingoGame.getScoreOfWinningCard()).toBe(4512);
+        });
+    });
+
  
 });
