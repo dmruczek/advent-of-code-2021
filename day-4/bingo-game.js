@@ -27,34 +27,42 @@ module.exports = class BingoGame {
         this.bingoCards = bingoCards;
     }
 
-    runGameUntilWinnerFound() {
-        this.numberIndex = 0;
+    runGameSimulation() {
+        let winningCardArray = [];
+        for (let i = 0; i < this.bingoCards.length; i++) {
+            winningCardArray.push(false);
+        }
+        this.winningCardArray = winningCardArray;
+        this.firstWinningCardIndex = -1;
 
         for (let i = 0; i < this.numbersToCall.length; i++) {
-
-            const winningCardIndex = this.callNumberAndCheckForWinner(this.numbersToCall[i]);
-            if (winningCardIndex >= 0) {
-                this.winningCardIndex = winningCardIndex;
-                return;
-            }
+            this.callNumberAndCheckForWinner(this.numbersToCall[i]);
         }
     }
 
     callNumberAndCheckForWinner(number) {
         for (let i = 0; i < this.bingoCards.length; i++) {
-            const numberFound = this.bingoCards[i].markNumber(number);
-            if (numberFound) {
-                if (this.bingoCards[i].checkForWinner()) {
-                    return i;
+            if (!this.winningCardArray[i]) {
+                const numberFound = this.bingoCards[i].markNumber(number);
+                if (numberFound) {
+                    if (this.bingoCards[i].checkForWinner()) {
+                        this.winningCardArray[i] = true;
+                        if (this.firstWinningCardIndex === -1) {
+                            this.firstWinningCardIndex = i;
+                        }
+                        this.lastPlaceCardIndex = i;
+                    }
                 }
             }
         }
-
-        return -1;
     }
 
     getScoreOfWinningCard() {
-        return this.bingoCards[this.winningCardIndex].calculateScoreOfCard();
+        return this.bingoCards[this.firstWinningCardIndex].calculateScoreOfCard();
+    }
+
+    getScoreOfLastPlaceCard() {
+        return this.bingoCards[this.lastPlaceCardIndex].calculateScoreOfCard();
     }
 
 };

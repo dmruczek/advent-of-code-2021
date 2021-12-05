@@ -18,14 +18,22 @@ describe('BingoGame', function () {
         });
     });
 
-    describe('runGameUntilWinnerFound', function() {
-        it('should run the bingo game until a winner is found and a score can be calculated.', function () {
+    describe('runGameSimulation', function() {
+        it('should find a winning board, whose score can be calculated.', function () {
             const bingoGame = new BingoGame();
             bingoGame.loadInput('test-input.txt');
-            bingoGame.runGameUntilWinnerFound();
-            expect(bingoGame.winningCardIndex).toBe(2);
+            bingoGame.runGameSimulation();
+            expect(bingoGame.firstWinningCardIndex).toBe(2);
             expect(bingoGame.getScoreOfWinningCard()).toBe(4512);
         });
+        it('should run the simulation until all boards have won, and then the score of the last place board can be calculated.', function () {
+            const bingoGame = new BingoGame();
+            bingoGame.loadInput('test-input.txt');
+            bingoGame.runGameSimulation();
+            expect(bingoGame.lastPlaceCardIndex).toBe(1);
+            expect(bingoGame.getScoreOfLastPlaceCard()).toBe(1924);
+        });
+
     });
 
  

@@ -3,4 +3,4 @@ const bingoGame = new BingoGame();
 bingoGame.loadInput('input.txt');
 bingoGame.runGameSimulation();
 
-console.log(bingoGame.getScoreOfWinningCard());
+console.log(bingoGame.getScoreOfLastPlaceCard());
