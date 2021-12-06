@@ -6,7 +6,7 @@ describe('LanternfishSpawningSimulator', function () {
         it('should load the fish list based on the input', function () {
             const lanternfishSpawningSimulator = new LanternfishSpawningSimulator();
             lanternfishSpawningSimulator.loadInput('test-input.txt');
-            expect(lanternfishSpawningSimulator.fishList).toEqual([3,4,3,1,2]);
+            expect(lanternfishSpawningSimulator.fishMaturityLevelCountArray).toEqual([0,1,1,2,1,0,0,0,0]);
         });
     });
 
@@ -15,9 +15,9 @@ describe('LanternfishSpawningSimulator', function () {
             const lanternfishSpawningSimulator = new LanternfishSpawningSimulator();
             lanternfishSpawningSimulator.loadInput('test-input.txt');
             lanternfishSpawningSimulator.simulateOneCycle();
-            expect(lanternfishSpawningSimulator.fishList).toEqual([2,3,2,0,1]);
+            expect(lanternfishSpawningSimulator.fishMaturityLevelCountArray).toEqual([1,1,2,1,0,0,0,0,0]);
             lanternfishSpawningSimulator.simulateOneCycle();
-            expect(lanternfishSpawningSimulator.fishList).toEqual([1,2,1,6,0,8]);
+            expect(lanternfishSpawningSimulator.fishMaturityLevelCountArray).toEqual([1,2,1,0,0,0,1,0,1]);
         });
     });
 
@@ -31,6 +31,11 @@ describe('LanternfishSpawningSimulator', function () {
             lanternfishSpawningSimulator.loadInput('test-input.txt');
             lanternfishSpawningSimulator.simulateXCycles(80);
             expect(lanternfishSpawningSimulator.getNumberOfFish()).toBe(5934);
+
+            lanternfishSpawningSimulator.loadInput('test-input.txt');
+            lanternfishSpawningSimulator.simulateXCycles(256);
+            expect(lanternfishSpawningSimulator.getNumberOfFish()).toBe(26984457539);
+
         });
     });
 

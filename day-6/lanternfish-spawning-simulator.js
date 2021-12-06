@@ -14,11 +14,12 @@ module.exports = class LanternfishSpawningSimulator {
 
         const initialFishStrArray = lines[0].split(',');
 
-        let fishList = [];
+        let fishMaturityLevelCountArray = [0,0,0,0,0,0,0,0,0];
+
         for (let i = 0; i < initialFishStrArray.length; i++) {
-            fishList.push(parseInt(initialFishStrArray[i], 10));
+            fishMaturityLevelCountArray[initialFishStrArray[i]] += 1;
         }
-        this.fishList = fishList;
+        this.fishMaturityLevelCountArray = fishMaturityLevelCountArray;
     }
 
     simulateXCycles(numberOfCycles) {
@@ -28,18 +29,22 @@ module.exports = class LanternfishSpawningSimulator {
     }
     
     simulateOneCycle() {
-        for (let i = this.fishList.length-1; i >= 0; i--) {
-            if (this.fishList[i] === 0) {
-                this.fishList.push(8);
-                this.fishList[i] = 6;
-            } else {
-                this.fishList[i] = this.fishList[i] - 1;
-            }
+
+        let newFishMaturityLevelCountArray = [0,0,0,0,0,0,0,0,0];
+        for (let i = 8; i > 0; i--) {
+            newFishMaturityLevelCountArray[i-1] = this.fishMaturityLevelCountArray[i];
         }
+        newFishMaturityLevelCountArray[8] = this.fishMaturityLevelCountArray[0];
+        newFishMaturityLevelCountArray[6] = newFishMaturityLevelCountArray[6] + this.fishMaturityLevelCountArray[0];
+        this.fishMaturityLevelCountArray = newFishMaturityLevelCountArray;
     }
 
     getNumberOfFish() {
-        return this.fishList.length;
+        let totalNumberOfFish = 0;
+        for (let i = 0; i < this.fishMaturityLevelCountArray.length; i++) {
+            totalNumberOfFish += this.fishMaturityLevelCountArray[i];
+        }
+        return totalNumberOfFish;
     }
 
 
