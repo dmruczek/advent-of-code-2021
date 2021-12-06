@@ -50,7 +50,13 @@ module.exports = class HydrothermalVentMap {
         }
     }
 
-    mapVent(vent) {
+    mapAllHorizontalAndVerticalVents() {
+        for (let i = 0; i < this.ventList.length; i++) {
+            this.mapVent(this.ventList[i], false);
+        }
+    }
+
+    mapVent(vent, considerDiagonal) {
 
         if (vent.isVertical()) {
             let y1 = vent.y1;
@@ -74,6 +80,8 @@ module.exports = class HydrothermalVentMap {
             for (let x = x1; x <= x2; x++) {
                 this.map[y][x] += 1;
             }
+        } else if (considerDiagonal) {
+            throw 'not implemented';
         }
     }
 

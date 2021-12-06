@@ -28,7 +28,7 @@ describe('HydrothermalVentMap', function () {
         it('should properly map all the vents in thet list.', function () {
             const hydrothermalVentMap = new HydrothermalVentMap();
             hydrothermalVentMap.loadInput('test-input.txt');
-            hydrothermalVentMap.mapAllVents();
+            hydrothermalVentMap.mapAllHorizontalAndVerticalVents();
             const expectedMapState = ".......1..\n..1....1..\n..1....1..\n.......1..\n.112111211\n..........\n..........\n..........\n..........\n222111....\n";
             expect(hydrothermalVentMap.getStringRepresentationOfMap()).toBe(expectedMapState);
         });
@@ -38,7 +38,7 @@ describe('HydrothermalVentMap', function () {
         it('should properly tabulate a count of the number of positions that have overlapping vents.', function () {
             const hydrothermalVentMap = new HydrothermalVentMap();
             hydrothermalVentMap.loadInput('test-input.txt');
-            hydrothermalVentMap.mapAllVents();
+            hydrothermalVentMap.mapAllHorizontalAndVerticalVents();
             expect(hydrothermalVentMap.countVentOverlapPoints()).toBe(5);
         });
     });

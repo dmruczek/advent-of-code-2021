@@ -1,5 +1,5 @@
 const HydrothermalVentMap = require('./hydrothermal-vent-map.js');
 const hydrothermalVentMap = new HydrothermalVentMap();
 hydrothermalVentMap.loadInput('input.txt');
-hydrothermalVentMap.mapAllVents();
+hydrothermalVentMap.mapAllHorizontalAndVerticalVents();
 console.log(hydrothermalVentMap.countVentOverlapPoints());
