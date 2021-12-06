@@ -46,7 +46,7 @@ module.exports = class HydrothermalVentMap {
 
     mapAllVents() {
         for (let i = 0; i < this.ventList.length; i++) {
-            this.mapVent(this.ventList[i]);
+            this.mapVent(this.ventList[i], true);
         }
     }
 
@@ -56,7 +56,7 @@ module.exports = class HydrothermalVentMap {
         }
     }
 
-    mapVent(vent, considerDiagonal) {
+    mapVent(vent, shouldConsiderDiagonal) {
 
         if (vent.isVertical()) {
             let y1 = vent.y1;
@@ -80,8 +80,27 @@ module.exports = class HydrothermalVentMap {
             for (let x = x1; x <= x2; x++) {
                 this.map[y][x] += 1;
             }
-        } else if (considerDiagonal) {
-            throw 'not implemented';
+        } else if (shouldConsiderDiagonal) {
+            const x1 = vent.x1;
+            const x2 = vent.x2;
+            const y1 = vent.y1;
+            const y2 = vent.y2;
+
+            let xDirection = 1;
+            let yDirection = 1;
+
+            let maxOffset = x2-x1 + 1;
+            if (x1 > x2) {
+                xDirection = -1;
+                maxOffset = x1-x2 + 1;
+            }
+            if (y1 > y2) {
+                yDirection = -1;
+            }
+
+            for (let offset = 0; offset < maxOffset; offset++) {
+                this.map[y1 + (offset * yDirection)][x1 + (offset * xDirection)] += 1;
+            }
         }
     }
 

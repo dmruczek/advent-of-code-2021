@@ -24,13 +24,24 @@ describe('HydrothermalVentMap', function () {
         });
     });
 
-    describe('mapAllVents', function() {
-        it('should properly map all the vents in thet list.', function () {
+    describe('mapAllHorizontalAndVerticalVents', function() {
+        it('should properly map all the vents in thet list that are either horizontal or vertical.', function () {
             const hydrothermalVentMap = new HydrothermalVentMap();
             hydrothermalVentMap.loadInput('test-input.txt');
             hydrothermalVentMap.mapAllHorizontalAndVerticalVents();
             const expectedMapState = ".......1..\n..1....1..\n..1....1..\n.......1..\n.112111211\n..........\n..........\n..........\n..........\n222111....\n";
             expect(hydrothermalVentMap.getStringRepresentationOfMap()).toBe(expectedMapState);
+        });
+    });
+
+    describe('mapAllVents', function() {
+        it('should properly map all the vents.', function () {
+            const hydrothermalVentMap = new HydrothermalVentMap();
+            hydrothermalVentMap.loadInput('test-input.txt');
+            hydrothermalVentMap.mapAllVents();
+            const expectedMapState = "1.1....11.\n.111...2..\n..2.1.111.\n...1.2.2..\n.112313211\n...1.2....\n..1...1...\n.1.....1..\n1.......1.\n222111....\n";
+            expect(hydrothermalVentMap.getStringRepresentationOfMap()).toBe(expectedMapState);
+            expect(hydrothermalVentMap.countVentOverlapPoints()).toBe(12);
         });
     });
 
