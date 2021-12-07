@@ -17,10 +17,14 @@ describe('CrabSubmarineAligner', function () {
             const crabSubmarineAligner = new CrabSubmarineAligner();
             crabSubmarineAligner.loadInput('test-input.txt');
             expect(crabSubmarineAligner.calculateFuelCostForPosition(2)).toEqual(37);
-            // for (let i = 0; i < 17; i++) {
-            //     console.log('Cost to move to position ' + i + ' is: ' + crabSubmarineAligner.calculateFuelCostForPosition(i));
-            // }
         });
+
+        it('should calculate the fuel cost for all subs to move to the given position for the enhanced fuel cost calculation.', function () {
+            const crabSubmarineAligner = new CrabSubmarineAligner(true);
+            crabSubmarineAligner.loadInput('test-input.txt');
+            expect(crabSubmarineAligner.calculateFuelCostForPosition(5)).toEqual(168);
+        });
+
     });
 
     describe('findOptimizedCrabSubPosition', function() {
@@ -29,6 +33,12 @@ describe('CrabSubmarineAligner', function () {
             crabSubmarineAligner.loadInput('test-input.txt');
             expect(crabSubmarineAligner.findOptimizedCrabSubPosition()).toBe(2);
         });
+        it('should find the best crab sub position when using the enhanced fuel cost calculation.', function () {
+            const crabSubmarineAligner = new CrabSubmarineAligner(true);
+            crabSubmarineAligner.loadInput('test-input.txt');
+            expect(crabSubmarineAligner.findOptimizedCrabSubPosition()).toBe(5);
+        });
+
     });
     
 
