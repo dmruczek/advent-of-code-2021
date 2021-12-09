@@ -19,6 +19,14 @@ describe('SubmarineDisplay', function () {
         });
     });
 
+    describe('decodeDisplayedDigits', function() {
+        it('should decode all digits displayed in the signal pattern', function () {
+            let submarineDisplay  = new SubmarineDisplay('acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf');
+            expect(submarineDisplay.decodeDisplayedDigits()).toEqual(5353);
+
+        });
+    });
+
     
 
 });

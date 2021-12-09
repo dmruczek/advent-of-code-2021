@@ -18,5 +18,12 @@ describe('SubmarineDisplayDecoder', function () {
         });
     });
 
+    describe('decodeAllDisplaysAndSumValues', function() {
+        it('should decode all displays and sum up their values.', function () {
+            const submarineDisplayDecoder = new SubmarineDisplayDecoder();
+            submarineDisplayDecoder.loadInput('test-input.txt');
+            expect(submarineDisplayDecoder.decodeAllDisplaysAndSumValues()).toBe(61229);
+        });
+    });
 
 });

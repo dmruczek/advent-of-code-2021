@@ -29,6 +29,14 @@ module.exports = class SubmarineDisplayDecoder {
         }
         return total1478DigitsDisplayed;
     }
-        
+
+    decodeAllDisplaysAndSumValues() {
+        let total = 0;
+        for (let i = 0; i < this.displays.length; i++) {
+            total += this.displays[i].decodeDisplayedDigits();
+        }
+        return total;
+    }
+
 
 };
