@@ -34,6 +34,76 @@ module.exports = class HeightmapAnalyzer {
         this.lowPoints = lowPoints;
     }
 
+    calculateProductOfThreeLargestBasins() {
+        this.basins.sort(function(basinA, basinB) {
+            return basinB.length - basinA.length;
+        });
+        return this.basins[0].length * this.basins[1].length * this.basins[2].length;
+    }
+
+    findAllBasins() {
+        this.findAllLowPoints();
+        let basins = [];
+        for (let i = 0; i < this.lowPoints.length; i++) {
+            basins.push(this.findBasinForLowPoint(this.lowPoints[i].x, this.lowPoints[i].y));
+        }
+        this.basins = basins;
+    }
+
+    findBasinForLowPoint(x,y) {
+        let basinMap = this.expandBasinFromPoint(x,y);
+        let basinPointList = [{x:x, y:y}];
+        for (const point of basinMap.keys()) {
+            basinPointList.push(JSON.parse(point));
+        }
+        return basinPointList;
+    }
+
+
+    expandBasinFromPoint(x,y, basinPointMap) {
+        const thisValue = this.heightmap[y][x];
+        if (!basinPointMap) {
+            basinPointMap = new Map();
+        }
+
+        if (x > 0) {
+            const newPoint = {x:x-1, y:y};
+            const newPointKey = JSON.stringify(newPoint);
+            if (!basinPointMap.has(newPointKey) && thisValue < this.heightmap[newPoint.y][newPoint.x] && this.heightmap[newPoint.y][newPoint.x] !== 9) {
+                // console.log('Adding point: (x:' + newPoint.x + ', y:' + newPoint.y + ')');
+                basinPointMap.set(newPointKey, true);
+                basinPointMap = this.expandBasinFromPoint(newPoint.x, newPoint.y, basinPointMap);
+            }
+        }
+        if (x < (this.heightmap[0].length-1)) {
+            const newPoint = {x:x+1, y:y};
+            const newPointKey = JSON.stringify(newPoint);
+            if (!basinPointMap.has(newPointKey) && thisValue < this.heightmap[newPoint.y][newPoint.x] && this.heightmap[newPoint.y][newPoint.x] !== 9) {
+                // console.log('Adding point: (x:' + newPoint.x + ', y:' + newPoint.y + ')');
+                basinPointMap.set(newPointKey, true);
+                basinPointMap = this.expandBasinFromPoint(newPoint.x, newPoint.y, basinPointMap);
+            }
+        }
+        if (y > 0) {
+            const newPoint = {x:x, y:y-1};
+            const newPointKey = JSON.stringify(newPoint);
+            if (!basinPointMap.has(newPointKey) && thisValue < this.heightmap[newPoint.y][newPoint.x] && this.heightmap[newPoint.y][newPoint.x] !== 9) {
+                // console.log('Adding point: (x:' + newPoint.x + ', y:' + newPoint.y + ')');
+                basinPointMap.set(newPointKey, true);
+                basinPointMap = this.expandBasinFromPoint(newPoint.x, newPoint.y, basinPointMap);
+            }
+        }
+        if (y < (this.heightmap.length-1)) {
+            const newPoint = {x:x, y:y+1};
+            const newPointKey = JSON.stringify(newPoint);
+            if (!basinPointMap.has(newPointKey) && thisValue < this.heightmap[newPoint.y][newPoint.x] && this.heightmap[newPoint.y][newPoint.x] !== 9) {
+                // console.log('Adding point: (x:' + newPoint.x + ', y:' + newPoint.y + ')');
+                basinPointMap.set(newPointKey, true);
+                basinPointMap = this.expandBasinFromPoint(newPoint.x, newPoint.y, basinPointMap);
+            }
+        }
+        return basinPointMap;
+    }
 
     calculateRiskLevelOfPoint(x, y) {
         return this.heightmap[y][x] + 1;

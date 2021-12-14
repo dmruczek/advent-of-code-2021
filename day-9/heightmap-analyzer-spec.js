@@ -49,4 +49,44 @@ describe('HeightmapAnalyzer', function () {
         });
     });
 
+    describe('findBasinForLowPoint', function() {
+        it('should correctly find a basin, given a low point.', function () {
+            const heightmapAnalyzer = new HeightmapAnalyzer();
+            heightmapAnalyzer.loadInput('test-input.txt');
+            const basinPointList = heightmapAnalyzer.findBasinForLowPoint(9,0);
+            expect(basinPointList).toEqual([
+                {"x":9,"y":0},
+                {"x":8,"y":0},
+                {"x":7,"y":0},
+                {"x":6,"y":0},
+                {"x":5,"y":0},
+                {"x":6,"y":1},
+                {"x":8,"y":1},
+                {"x":9,"y":1},
+                {"x":9,"y":2}]);
+        });
+    });
+
+    describe('findAllBasins', function() {
+        it('should correctly find all basins.', function () {
+            const heightmapAnalyzer = new HeightmapAnalyzer();
+            heightmapAnalyzer.loadInput('test-input.txt');
+            heightmapAnalyzer.findAllBasins();
+            expect(heightmapAnalyzer.basins.length).toBe(4);
+        });
+    });
+
+    describe('calculateProductOfThreeLargestBasins', function() {
+        it('should correctly calculate the product of the three largest basins.', function () {
+            const heightmapAnalyzer = new HeightmapAnalyzer();
+            heightmapAnalyzer.loadInput('test-input.txt');
+            heightmapAnalyzer.findAllBasins();
+            expect(heightmapAnalyzer.calculateProductOfThreeLargestBasins()).toBe(1134);
+        });
+    });
+
+    
+
+    
+
 });
