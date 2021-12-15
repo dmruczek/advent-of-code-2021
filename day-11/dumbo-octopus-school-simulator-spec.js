@@ -86,8 +86,17 @@ describe('DumboOctopusSchoolSimulator', function () {
             expect(dumboOctopusSchoolSimulator.totalFlashes).toBe(204);
             dumboOctopusSchoolSimulator.runSteps(90);
             expect(dumboOctopusSchoolSimulator.totalFlashes).toBe(1656);
+            expect(dumboOctopusSchoolSimulator.iteration).toBe(100);
         });
     });
 
+    describe('runUntilFirstSynchronization', function() {
+        it('should run until all octopi flash at the same time.', function () {
+            const dumboOctopusSchoolSimulator = new DumboOctopusSchoolSimulator();
+            dumboOctopusSchoolSimulator.loadInput('test-input.txt');
+            dumboOctopusSchoolSimulator.runUntilFirstSynchronization();
+            expect(dumboOctopusSchoolSimulator.iteration).toBe(195);
+        });
+    });
 
 });

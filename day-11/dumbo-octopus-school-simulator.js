@@ -20,6 +20,7 @@ module.exports = class DumboOctopusSchoolSimulator {
         this.maxX = this.octopusMatrix[0].length-1;
         this.maxY = this.octopusMatrix.length-1;
         this.totalFlashes = 0;
+        this.iteration = 0;
     }
 
     parseOctopusRow(octopusRowStr) {
@@ -37,6 +38,7 @@ module.exports = class DumboOctopusSchoolSimulator {
     }
 
     processStep() {
+        this.iteration++;
         let octopiToProcess = [];
         for (let thisX = 0; thisX <= this.maxX; thisX ++) {
             for (let thisY = 0; thisY <= this.maxY; thisY ++) {
@@ -83,6 +85,26 @@ module.exports = class DumboOctopusSchoolSimulator {
             }
         }
         return surroundingOctopi;
+    }
+
+    isSynchronizedFlash() {
+        for (let thisX = 0; thisX <= this.maxX; thisX ++) {
+            for (let thisY = 0; thisY <= this.maxY; thisY ++) {
+                if (this.octopusMatrix[thisY][thisX] !== 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    runUntilFirstSynchronization() {
+        while (true) {
+            this.processStep();
+            if (this.isSynchronizedFlash()) {
+                return;
+            }
+        }
     }
 
     // printOctopusMatrix() {
