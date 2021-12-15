@@ -10,4 +10,12 @@ describe('NavigationSubsystemParser', function () {
         });
     });
 
+    describe('findLegalLinesAndComputeScore', function() {
+        it('should properly compute the score based on valid lines.', function () {
+            const navigationSubsystemParser = new NavigationSubsystemParser();
+            navigationSubsystemParser.loadInput('test-input.txt');
+            expect(navigationSubsystemParser.findLegalLinesAndComputeScore()).toBe(288957);
+        });
+    });
+
 });

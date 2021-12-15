@@ -16,6 +16,21 @@ module.exports = class NavigationSubsystemParser {
         this.lines = lines;
     }
 
+    findLegalLinesAndComputeScore() {
+        let scores = [];
+        for (let i = 0; i < this.lines.length; i++) {
+            const chunk = new Chunk(this.lines[i]);
+            if (chunk.isValid()) {
+                chunk.completePatternForValidChunk();
+                scores.push(chunk.getScore());
+            }
+        }
+        scores.sort(function(a, b) {
+            return a - b;
+        });
+        return scores[Math.floor(scores.length / 2)];
+    }
+
     findIllegalLinesAndComputeScore() {
         let score = 0;
         for (let i = 0; i < this.lines.length; i++) {
