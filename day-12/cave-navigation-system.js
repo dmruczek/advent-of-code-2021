@@ -62,4 +62,9 @@ module.exports = class CaveNavigationSystem {
         return paths;
     }
 
+    findPathsFromStartToEndAllowingOneDoubleSmallCaveVisit() {
+        let paths = this.startNode.navigateTowardsEnd([], true);
+        return paths;
+    }
+
 };

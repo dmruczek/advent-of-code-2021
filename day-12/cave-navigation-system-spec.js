@@ -73,5 +73,42 @@ describe('CaveNavigationSystem', function () {
         });
     });
 
+    describe('findPathsFromStartToEndAllowingOneDoubleSmallCaveVisit', function() {
+        it('should find all valid paths from start to end which allow you to visit one small cave twice.', function () {
+            let caveNavigationSystem = new CaveNavigationSystem();
+            caveNavigationSystem.processInputData([
+                'start-A',
+                'start-b',
+                'A-c',
+                'A-b',
+                'b-d',
+                'A-end',
+                'b-end'
+            ]);
+            let paths = caveNavigationSystem.findPathsFromStartToEndAllowingOneDoubleSmallCaveVisit();
+            expect(paths.length).toBe(36);
+
+            caveNavigationSystem = new CaveNavigationSystem();
+            caveNavigationSystem.processInputData([
+                'dc-end',
+                'HN-start',
+                'start-kj',
+                'dc-start',
+                'dc-HN',
+                'LN-dc',
+                'HN-end',
+                'kj-sa',
+                'kj-HN',
+                'kj-dc'
+            ]);
+            paths = caveNavigationSystem.findPathsFromStartToEndAllowingOneDoubleSmallCaveVisit();
+            expect(paths.length).toBe(103);
+
+            caveNavigationSystem = new CaveNavigationSystem();
+            caveNavigationSystem.loadInput('test-input.txt');
+            paths = caveNavigationSystem.findPathsFromStartToEndAllowingOneDoubleSmallCaveVisit();
+            expect(paths.length).toBe(3509);
+        });
+    });
 
 });
