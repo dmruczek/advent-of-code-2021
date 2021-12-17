@@ -45,21 +45,26 @@ module.exports = class TransparentOrigamiFolder {
         this.maxY = maxY;
     }
 
+    processAllFoldingInstructions() {
+        for (let i = 0; i < this.foldInstructionList.length; i++) {
+            this.processFoldInstruction(this.foldInstructionList[i]);
+        }
+    }
+
     processFoldInstruction(foldInstruction) {
         const foldAxis = foldInstruction.axis;
         const foldLocation = foldInstruction.location;
         if (foldAxis === 'y') {
             // fold upward
-            this.maxY = foldLocation;
+            this.maxY = foldLocation - 1;
             for (let i = 0; i < this.dotList.length; i++) {
                 if (this.dotList[i].y > foldLocation) {
-                    // const prev = this.dotList[i].y;
                     this.dotList[i].y = this.dotList[i].y - ((this.dotList[i].y - foldLocation) * 2);
-                    // console.log("Moved dot (X: " + this.dotList[i].x + ", Y: " + prev + ")  to  (X: " + this.dotList[i].x + ", Y: " + this.dotList[i].y + ")");
                 }
             }
         } else if (foldAxis === 'x') {
-            this.maxX = foldLocation;
+            // fold left
+            this.maxX = foldLocation - 1;
             for (let i = 0; i < this.dotList.length; i++) {
                 if (this.dotList[i].x > foldLocation) {
                     this.dotList[i].x = this.dotList[i].x - ((this.dotList[i].x - foldLocation) * 2);

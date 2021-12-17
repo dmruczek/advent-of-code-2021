@@ -45,5 +45,14 @@ describe('TransparentOrigamiFolder', function () {
 
         });
     });
+
+    describe('processAllFoldingInstructions', function() {
+        it('should properly handle all fold instructions.', function () {
+            const transparentOrigamiFolder = new TransparentOrigamiFolder();
+            transparentOrigamiFolder.loadInput('test-input.txt');
+            transparentOrigamiFolder.processAllFoldingInstructions();
+            expect(transparentOrigamiFolder.getPaperAsString()).toEqual('#####\n#...#\n#...#\n#...#\n#####\n.....\n.....\n');
+        });
+    });
     
 });
