@@ -20,11 +20,20 @@ describe('PolymerizationSimulator', function () {
             const polymerizationSimulator = new PolymerizationSimulator();
             polymerizationSimulator.loadInput('test-input.txt');
             polymerizationSimulator.simulatePairInsertionProcess();
-            expect(polymerizationSimulator.polymer).toEqual(['N', 'C', 'N', 'B', 'C', 'H', 'B']);
+            polymerizationSimulator.createElementOccurranceMap();
+            // expect(polymerizationSimulator.polymer).toEqual(['N', 'C', 'N', 'B', 'C', 'H', 'B']);
+            expect(polymerizationSimulator.elementOccuranceMap.get('N')).toBe(2);
+            expect(polymerizationSimulator.elementOccuranceMap.get('C')).toBe(2);
+            expect(polymerizationSimulator.elementOccuranceMap.get('B')).toBe(2);
+            expect(polymerizationSimulator.elementOccuranceMap.get('H')).toBe(1);
+
             polymerizationSimulator.simulatePairInsertionProcess();
-            expect(polymerizationSimulator.polymer).toEqual(['N', 'B', 'C', 'C', 'N', 'B', 'B', 'B', 'C', 'B', 'H', 'C', 'B']);
-            polymerizationSimulator.simulatePairInsertionProcess();
-            expect(polymerizationSimulator.polymer).toEqual(['N', 'B', 'B', 'B', 'C', 'N', 'C', 'C', 'N', 'B', 'B', 'N', 'B', 'N', 'B', 'B', 'C', 'H', 'B', 'H', 'H', 'B', 'C', 'H', 'B']);
+            polymerizationSimulator.createElementOccurranceMap();
+            // expect(polymerizationSimulator.polymer).toEqual(['N', 'B', 'C', 'C', 'N', 'B', 'B', 'B', 'C', 'B', 'H', 'C', 'B']);
+            expect(polymerizationSimulator.elementOccuranceMap.get('N')).toBe(2);
+            expect(polymerizationSimulator.elementOccuranceMap.get('C')).toBe(4);
+            expect(polymerizationSimulator.elementOccuranceMap.get('B')).toBe(6);
+            expect(polymerizationSimulator.elementOccuranceMap.get('H')).toBe(1);
         });
     });
 
@@ -35,6 +44,7 @@ describe('PolymerizationSimulator', function () {
             polymerizationSimulator.simulatePairInsertionProcessANumberOfTimes(10);
             expect(polymerizationSimulator.calculateMostCommonElementMinusLeastCommonElement()).toBe(1588);
         });
+
     });
 
     
