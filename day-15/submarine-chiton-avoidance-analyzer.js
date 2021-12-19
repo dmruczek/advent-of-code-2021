@@ -69,6 +69,7 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
     findPathThroughExpansion() {
         let expansionMatrix = JSON.parse(JSON.stringify(this.chitonRiskMatrix));
         let fullyExpandedNodesMap = new Map();
+        let closestToBottomRight = 0;
         fullyExpandedNodesMap.set(JSON.stringify({x: 0, y: 0}), {x: 0, y: 0});
         for (let y = expansionMatrix.length - 1; y > -1 ; y--) {
             for (let x = expansionMatrix[y].length - 1; x > -1 ; x--) {
@@ -79,25 +80,29 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
         let i = 0;
         while (!fullyExpandedNodesMap.has(JSON.stringify({x:this.chitonRiskMatrix[0].length-1, y:this.chitonRiskMatrix.length-1}))) {
             let nodesToExpandToMap = new Map();
+
             for (const coords of fullyExpandedNodesMap.values()) {
-                if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x-1, y: coords.y}))) {
-                    if (coords.x > 0) {
-                        nodesToExpandToMap.set(JSON.stringify({x: coords.x-1, y: coords.y}), {x: coords.x-1, y: coords.y});
+                const distanceToBottomRight = coords.x + coords.y;
+                if ((distanceToBottomRight + 9) >= closestToBottomRight) {
+                    if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x-1, y: coords.y}))) {
+                        if (coords.x > 0) {
+                            nodesToExpandToMap.set(JSON.stringify({x: coords.x-1, y: coords.y}), {x: coords.x-1, y: coords.y});
+                        }
                     }
-                }
-                if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x+1, y: coords.y}))) {
-                    if (coords.x < this.chitonRiskMatrix[0].length - 1) {
-                        nodesToExpandToMap.set(JSON.stringify({x: coords.x+1, y: coords.y}), {x: coords.x+1, y: coords.y});
+                    if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x+1, y: coords.y}))) {
+                        if (coords.x < this.chitonRiskMatrix[0].length - 1) {
+                            nodesToExpandToMap.set(JSON.stringify({x: coords.x+1, y: coords.y}), {x: coords.x+1, y: coords.y});
+                        }
                     }
-                }
-                if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x, y: coords.y-1}))) {
-                    if (coords.y > 0) {
-                        nodesToExpandToMap.set(JSON.stringify({x: coords.x, y: coords.y-1}), {x: coords.x, y: coords.y-1});
+                    if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x, y: coords.y-1}))) {
+                        if (coords.y > 0) {
+                            nodesToExpandToMap.set(JSON.stringify({x: coords.x, y: coords.y-1}), {x: coords.x, y: coords.y-1});
+                        }
                     }
-                }
-                if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x, y: coords.y+1}))) {
-                    if (coords.y < this.chitonRiskMatrix.length - 1) {
-                        nodesToExpandToMap.set(JSON.stringify({x: coords.x, y: coords.y+1}), {x: coords.x, y: coords.y+1});
+                    if (!fullyExpandedNodesMap.has(JSON.stringify({x: coords.x, y: coords.y+1}))) {
+                        if (coords.y < this.chitonRiskMatrix.length - 1) {
+                            nodesToExpandToMap.set(JSON.stringify({x: coords.x, y: coords.y+1}), {x: coords.x, y: coords.y+1});
+                        }
                     }
                 }
             }
@@ -106,6 +111,9 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
                 expansionMatrix[coords.y][coords.x] += 1;
                 if (expansionMatrix[coords.y][coords.x] === this.chitonRiskMatrix[coords.y][coords.x]) {
                     fullyExpandedNodesMap.set(JSON.stringify(coords), coords);
+                    if ((coords.x + coords.y) > closestToBottomRight) {
+                        closestToBottomRight = coords.x + coords.y;
+                    }
                 }
             }
             i++;
