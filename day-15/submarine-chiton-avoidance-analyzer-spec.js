@@ -21,7 +21,6 @@ describe('SubmarineChitonAvoidanceAnalyzer', function () {
         });
     });
 
-
     describe('calculateAggregateRiskOfPosition', function() {
         it('should properly calculate the aggregate risk level of a given position.', function () {
             const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
@@ -30,15 +29,22 @@ describe('SubmarineChitonAvoidanceAnalyzer', function () {
             expect(submarineChitonAvoidanceAnalyzer.calculateAggregateRiskOfPosition(8,9)).toBe(9);
             expect(submarineChitonAvoidanceAnalyzer.calculateAggregateRiskOfPosition(0,0)).toBe(40);
         });
+    });
 
-        // it('should sometimes go up, if that is better...', function () {
-        //     const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
-        //     submarineChitonAvoidanceAnalyzer.loadInput('test-input-2.txt');
-        //     expect(submarineChitonAvoidanceAnalyzer.calculateAggregateRiskOfPosition(0,0)).toBe(17);
 
-        //     submarineChitonAvoidanceAnalyzer.printAggregateRiskMatrix();
-        // });
+    describe('doRiskCalculation', function() {
 
+        it('should properly calculate the risk level given the simple case where we always go down and to the right.', function () {
+            const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
+            submarineChitonAvoidanceAnalyzer.loadInput('test-input.txt');
+            expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(40);
+        });
+
+        it('should sometimes go up, if that is better...', function () {
+            const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
+            submarineChitonAvoidanceAnalyzer.loadInput('test-input-2.txt');
+            expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(18);
+        });
 
     });
 

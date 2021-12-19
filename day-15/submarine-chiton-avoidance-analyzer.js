@@ -31,6 +31,12 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
         this.chitonRiskMatrix[0][0] = 0;
     }
 
+    doRiskCalculation() {
+        this.calculateAggregateRiskOfPosition(0,0);
+        this.secondAggregateRiskPass();
+        return this.aggregateRiskMatrix[0][0];
+    }
+
     calculateAggregateRiskOfPosition(x, y) {
         let downRisk = 999999999;
         let rightRisk = 999999999;
@@ -59,6 +65,58 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
         this.aggregateRiskMatrix[y][x] = aggregateRisk;
         return aggregateRisk;
     }
+
+
+
+
+    secondAggregateRiskPass() {
+
+        for (let y = this.aggregateRiskMatrix.length - 1; y > -1 ; y--) {
+            for (let x = this.aggregateRiskMatrix[y].length - 1; x > -1 ; x--) {
+                // check if UP is better:
+                if (y > 0 && (this.aggregateRiskMatrix[y-1][x] + this.chitonRiskMatrix[y][x]) < this.aggregateRiskMatrix[y][x]) {
+                    // OK, up is better... Now what? ... Check if others depended on me, if so, update it and anyone who depended on him.
+                    // console.log(`need to adjust X: ${x}, Y: ${y}.  ${this.aggregateRiskMatrix[y-1][x]} is less than ${this.aggregateRiskMatrix[y][x]}`);
+                    this.cascadeAdjustments(this.aggregateRiskMatrix[y-1][x] + this.chitonRiskMatrix[y][x], x, y);
+                }
+                if (x > 0 && (this.aggregateRiskMatrix[y][x-1] + this.chitonRiskMatrix[y][x]) < this.aggregateRiskMatrix[y][x]) {
+                    // OK, left is better... Now what? ... Check if others depended on me, if so, update it and anyone who depended on him.
+                    this.cascadeAdjustments(this.aggregateRiskMatrix[y][x-1] + this.chitonRiskMatrix[y][x], x, y);
+                }
+
+
+            }
+        }
+    }
+
+    cascadeAdjustments(newValue, x, y) {
+        // did others depend on me?
+        const oldValue = this.aggregateRiskMatrix[y][x];
+        this.aggregateRiskMatrix[y][x] = newValue;
+
+        // cascade upward
+        if (y > 0 && this.aggregateRiskMatrix[y-1][x] === oldValue + this.chitonRiskMatrix[y-1][x]) {
+            this.cascadeAdjustments(newValue + this.chitonRiskMatrix[y-1][x], x, y-1);
+        }
+
+        // cascade leftward
+        if (x > 0 && this.aggregateRiskMatrix[y][x-1] === oldValue + this.chitonRiskMatrix[y][x-1]) {
+            this.cascadeAdjustments(newValue + this.chitonRiskMatrix[y][x-1], x-1, y);
+        }
+
+        // cascade downward
+        if ((y < this.aggregateRiskMatrix - 2) && this.aggregateRiskMatrix[y+1][x] === oldValue + this.chitonRiskMatrix[y+1][x]) {
+            this.cascadeAdjustments(newValue + this.chitonRiskMatrix[y+1][x], x, y+1);
+        }
+
+        // cascade rightward
+        if ((x < this.aggregateRiskMatrix[0] - 2) && this.aggregateRiskMatrix[y][x+1] === oldValue + this.chitonRiskMatrix[y][x+1]) {
+            this.cascadeAdjustments(newValue + this.chitonRiskMatrix[y][x+1], x+1, y);
+        }
+
+
+    }
+
 
 
     printAggregateRiskMatrix() {
