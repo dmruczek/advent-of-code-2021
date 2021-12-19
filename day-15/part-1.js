@@ -2,5 +2,6 @@ const SubmarineChitonAvoidanceAnalyzer = require('./submarine-chiton-avoidance-a
 const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
 submarineChitonAvoidanceAnalyzer.loadInput('input.txt');
 
-console.log(submarineChitonAvoidanceAnalyzer.doRiskCalculation());
-submarineChitonAvoidanceAnalyzer.printPath();
+// console.log(submarineChitonAvoidanceAnalyzer.doRiskCalculation());
+console.log(submarineChitonAvoidanceAnalyzer.findPathThroughExpansion());
+// submarineChitonAvoidanceAnalyzer.printPath();
