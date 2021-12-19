@@ -102,13 +102,22 @@ describe('SubmarineChitonAvoidanceAnalyzer', function () {
             const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
             submarineChitonAvoidanceAnalyzer.loadInput('test-input-2.txt');
             expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(18);
+            submarineChitonAvoidanceAnalyzer.printPath();
         });
 
-        it('should sometimes go up, and even left if that is better...', function () {
+        // it('should sometimes go up, and even left if that is better...', function () {
+        //     const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
+        //     submarineChitonAvoidanceAnalyzer.loadInput('test-input-3.txt');
+        //     expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(22);
+        //     submarineChitonAvoidanceAnalyzer.printAggregateRiskMatrix();
+        // });
+
+        it('should work for the 5X version.', function () {
             const submarineChitonAvoidanceAnalyzer = new SubmarineChitonAvoidanceAnalyzer();
-            submarineChitonAvoidanceAnalyzer.loadInput('test-input-3.txt');
-            expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(22);
+            submarineChitonAvoidanceAnalyzer.loadInput('test-input.txt', true);
+            expect(submarineChitonAvoidanceAnalyzer.doRiskCalculation()).toBe(315);
         });
+
 
     });
 
