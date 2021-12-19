@@ -48,46 +48,15 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
             for (let x = 0; x < lines[y].length; x++) {
                 const thisNum = parseInt(lines[y].charAt(x), 10);
 
-                // for (let yO = 0; yO < 5; yO ++) {
-                //     for (let xO = 0; xO < 5; xO ++) {
-                //         chitonRiskMatrix[y][x] = this.adjustNumber(thisNum + 1); thisNum;
-
-                //     }
-                // }
-
-
-
-                chitonRiskMatrix[y][x] = thisNum;
-
-                chitonRiskMatrix[y + 1*(lines.length)][x] = this.adjustNumber(thisNum + 1);
-                chitonRiskMatrix[y + 2*(lines.length)][x] = this.adjustNumber(thisNum + 2);
-                chitonRiskMatrix[y + 3*(lines.length)][x] = this.adjustNumber(thisNum + 3);
-                chitonRiskMatrix[y + 4*(lines.length)][x] = this.adjustNumber(thisNum + 4);
-
-                chitonRiskMatrix[y + 0*(lines.length)][x + lines[0].length] = this.adjustNumber(thisNum + 1);
-                chitonRiskMatrix[y + 1*(lines.length)][x + lines[0].length] = this.adjustNumber(thisNum + 2);
-                chitonRiskMatrix[y + 2*(lines.length)][x + lines[0].length] = this.adjustNumber(thisNum + 3);
-                chitonRiskMatrix[y + 3*(lines.length)][x + lines[0].length] = this.adjustNumber(thisNum + 4);
-                chitonRiskMatrix[y + 4*(lines.length)][x + lines[0].length] = this.adjustNumber(thisNum + 5);
-
-                chitonRiskMatrix[y + 0*(lines.length)][x + 2*(lines[0].length)] = this.adjustNumber(thisNum + 2);
-                chitonRiskMatrix[y + 1*(lines.length)][x + 2*(lines[0].length)] = this.adjustNumber(thisNum + 3);
-                chitonRiskMatrix[y + 2*(lines.length)][x + 2*(lines[0].length)] = this.adjustNumber(thisNum + 4);
-                chitonRiskMatrix[y + 3*(lines.length)][x + 2*(lines[0].length)] = this.adjustNumber(thisNum + 5);
-                chitonRiskMatrix[y + 4*(lines.length)][x + 2*(lines[0].length)] = this.adjustNumber(thisNum + 6);
-
-                chitonRiskMatrix[y + 0*(lines.length)][x + 3*(lines[0].length)] = this.adjustNumber(thisNum + 3);
-                chitonRiskMatrix[y + 1*(lines.length)][x + 3*(lines[0].length)] = this.adjustNumber(thisNum + 4);
-                chitonRiskMatrix[y + 2*(lines.length)][x + 3*(lines[0].length)] = this.adjustNumber(thisNum + 5);
-                chitonRiskMatrix[y + 3*(lines.length)][x + 3*(lines[0].length)] = this.adjustNumber(thisNum + 6);
-                chitonRiskMatrix[y + 4*(lines.length)][x + 3*(lines[0].length)] = this.adjustNumber(thisNum + 7);
-
-                chitonRiskMatrix[y + 0*(lines.length)][x + 4*(lines[0].length)] = this.adjustNumber(thisNum + 4);
-                chitonRiskMatrix[y + 1*(lines.length)][x + 4*(lines[0].length)] = this.adjustNumber(thisNum + 5);
-                chitonRiskMatrix[y + 2*(lines.length)][x + 4*(lines[0].length)] = this.adjustNumber(thisNum + 6);
-                chitonRiskMatrix[y + 3*(lines.length)][x + 4*(lines[0].length)] = this.adjustNumber(thisNum + 7);
-                chitonRiskMatrix[y + 4*(lines.length)][x + 4*(lines[0].length)] = this.adjustNumber(thisNum + 8);
-
+                for (let yO = 0; yO < 5; yO ++) {
+                    for (let xO = 0; xO < 5; xO ++) {
+                        let num = thisNum + (xO + yO);
+                        if (num > 9) {
+                            num -= 9;
+                        }
+                        chitonRiskMatrix[y + yO * (lines.length)][x + xO * (lines[0].length)] = num;
+                    }
+                }
             }
         }
         this.chitonRiskMatrix = chitonRiskMatrix;
@@ -95,15 +64,6 @@ module.exports = class SubmarineChitonAvoidanceAnalyzer {
         // Setting first position to risk 0, since you start here.
         this.chitonRiskMatrix[0][0] = 0;
     }
-
-    adjustNumber(num) {
-        if (num > 9) {
-            num -= 9;
-        }
-        return num;
-    }
-
-
 
     doRiskCalculation() {
         this.calculateAggregateRiskOfPosition(0,0);
