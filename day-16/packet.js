@@ -119,5 +119,114 @@ module.exports = class Packet {
         return versionSum;
     }
 
+    evaluate() {
+
+        let value;
+        switch(this.packetTypeIdDec) {
+            case 0:
+                // Sum of packets
+                value = this.calculateSumOfSubPackets();
+                break;
+            case 1:
+                // Product of packets
+                value = this.calculateProductOfSubPackets();
+                break;
+            case 2:
+                // minimum value
+                value = this.calculateMinimumValueOfSubPackets();
+                break;
+            case 3:
+                // maximum value
+                value = this.calculateMaximumValueOfSubPackets();
+                break;
+            case 4:
+                // Literal Value
+                value = this.literalPayloadDec;
+                break;
+            case 5:
+                // greater than
+                value = this.calculateGreaterThanForSubPackets();
+                break;
+            case 6:
+                // less than
+                value = this.calculateLessThanForSubPackets();
+                break;
+            case 7:
+                // equality
+                value = this.calculateEqualityForSubPackets();
+                break;
+    
+        }
+        return value;
+    }
+
+    calculateSumOfSubPackets() {
+        let value = 0;
+        for (let i = 0; i < this.subPackets.length; i++) {
+            value += this.subPackets[i].evaluate();
+        }
+        return value;
+    }
+
+    calculateProductOfSubPackets() {
+        let value = 1;
+        for (let i = 0; i < this.subPackets.length; i++) {
+            value = value * this.subPackets[i].evaluate();
+        }
+        return value;
+    }
+
+    calculateMinimumValueOfSubPackets() {
+        let value = this.subPackets[0].evaluate();
+        for (let i = 1; i < this.subPackets.length; i++) {
+            const thisValue = this.subPackets[i].evaluate();
+            if (thisValue < value) {
+                value = thisValue;
+            }
+        }
+        return value;
+    }
+
+    calculateMaximumValueOfSubPackets() {
+        let value = this.subPackets[0].evaluate();
+        for (let i = 1; i < this.subPackets.length; i++) {
+            const thisValue = this.subPackets[i].evaluate();
+            if (thisValue > value) {
+                value = thisValue;
+            }
+        }
+        return value;
+    }
+
+    calculateGreaterThanForSubPackets() {
+        const val1 = this.subPackets[0].evaluate();
+        const val2 = this.subPackets[1].evaluate();
+        let value = 0;
+        if (val1 > val2) {
+            value = 1;
+        }
+        return value;
+    }
+
+    calculateLessThanForSubPackets() {
+        const val1 = this.subPackets[0].evaluate();
+        const val2 = this.subPackets[1].evaluate();
+        let value = 0;
+        if (val1 < val2) {
+            value = 1;
+        }
+        return value;
+    }
+
+    calculateEqualityForSubPackets() {
+        const val1 = this.subPackets[0].evaluate();
+        const val2 = this.subPackets[1].evaluate();
+        let value = 0;
+        if (val1 === val2) {
+            value = 1;
+        }
+        return value;
+    }
+
 
 };
