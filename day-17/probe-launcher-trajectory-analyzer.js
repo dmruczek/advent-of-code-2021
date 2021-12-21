@@ -22,10 +22,7 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
         this.targetY2 = parseInt(match[4], 10);
     }
 
-
-
-    findHighestSuccessfulFiringSolution() {
-
+    getPossibleHighLobbedXVelocities() {
         // to find x, we basically need to find an initial velocity where the projectile will "stop" in the x direction (over the target area) while continuing to move upward.
         let possibleXVelocities = [];
         for (let xVel = 1; xVel < (this.targetX2 / 2); xVel++) {
@@ -46,6 +43,13 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
             //     console.log(`${xVel} is NOT an Option.  It stops at ${xPos}`);
             // }
         }
+        return possibleXVelocities;
+    }
+
+
+    findHighestSuccessfulFiringSolution() {
+
+        let possibleXVelocities = this.getPossibleHighLobbedXVelocities();
 
         let bestFiringSolution = {maxHeight:0};
         for (let yVel = 0; yVel < (this.targetY1 * -1); yVel++) {
@@ -64,7 +68,74 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
     }
 
     findAllSuccessfullFiringSolutions() {
-        
+        // There are three types of shots:  immediate direct, slow direct, and "lobbed".  Probably best to find them in different ways.
+
+        let possibleVelocities = [];
+
+        // Add all immediate direct velocities.
+        for (let yVel = this.targetY1; yVel <= this.targetY2; yVel++) {
+            for (let xVel = this.targetX1; xVel <= this.targetX2; xVel++) {
+                possibleVelocities.push({x:xVel, y:yVel});
+            }
+        }
+
+        // Find "slow" direct velocities based on all immediate direct velocities.
+        for (let i = 0; i < possibleVelocities.length; i++) {
+            let workingX = possibleVelocities[i].x;
+            let workingY = possibleVelocities[i].y;
+            let divisor = 2;
+            let xCandidate = workingX;
+            let yCandidate = workingY;
+            
+            while (Math.abs(xCandidate) > 1 && Math.abs(yCandidate) > 1) {
+                xCandidate = (workingX + (divisor)) / divisor;
+                yCandidate = (workingY + (divisor)) / divisor;
+
+                // console.log('checking ' + i + ', divisor: ' + divisor + `x:${xCandidate}, y:${yCandidate}`);
+
+                if (Number.isInteger(xCandidate) && Number.isInteger(yCandidate) && this.simulateFiringSolution(xCandidate, yCandidate).hitsTarget) {
+                    possibleVelocities.push({x: xCandidate, y: yCandidate});
+                }
+                divisor++;
+            }
+        }
+
+        // Find high lobbed velocities:
+        let possibleHighLobbedXVelocities = this.getPossibleHighLobbedXVelocities();
+        for (let yVel = 0; yVel < (this.targetY1 * -1); yVel++) {
+            for (let i = 0; i < possibleHighLobbedXVelocities.length; i++) {
+                const xVel = possibleHighLobbedXVelocities[i];
+                const firingSolution = this.simulateFiringSolution(xVel, yVel);
+
+                if (firingSolution.hitsTarget) {
+                    possibleVelocities.push({x: xVel, y: yVel});
+                }
+            }
+        }
+
+        // Find barely lobbed velocities:
+        for (let yVel = 0; yVel <= 2; yVel++) {
+            for (let xVel = 1; xVel < this.targetX2; xVel++) {
+                if (this.simulateFiringSolution(xVel, yVel).hitsTarget) {
+                    possibleVelocities.push({x: xVel, y: yVel});
+                }
+            }
+        }
+
+        // dedup
+        let possibleVelocitiesMap = new Map();
+        for (let i = 0; i < possibleVelocities.length; i++) {
+            possibleVelocitiesMap.set(JSON.stringify(possibleVelocities[i]), possibleVelocities[i]);
+        }
+        possibleVelocities = [];
+        for (const velocity of possibleVelocitiesMap.values()) {
+            possibleVelocities.push(velocity);
+        }
+
+        // console.log('Found velocities: ');
+        // console.log(possibleVelocities);
+
+        return possibleVelocities;
     }
 
     simulateFiringSolution(velocityX, velocityY) {
