@@ -60,10 +60,14 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
                 if (firingSolution.hitsTarget) {
                     if (firingSolution.maxHeight > bestFiringSolution.maxHeight) {
                         bestFiringSolution = firingSolution;
+                        bestFiringSolution.xVel = xVel;
+                        bestFiringSolution.yVel = yVel;
                     }
                 }
             }
         }
+        // console.log('best: ');
+        // console.log(bestFiringSolution);
         return bestFiringSolution;
     }
 
@@ -101,26 +105,39 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
         }
 
         // Find high lobbed velocities:
-        let possibleHighLobbedXVelocities = this.getPossibleHighLobbedXVelocities();
-        for (let yVel = 0; yVel < (this.targetY1 * -1); yVel++) {
-            for (let i = 0; i < possibleHighLobbedXVelocities.length; i++) {
-                const xVel = possibleHighLobbedXVelocities[i];
-                const firingSolution = this.simulateFiringSolution(xVel, yVel);
+        // let possibleHighLobbedXVelocities = this.getPossibleHighLobbedXVelocities();
+        // for (let yVel = 0; yVel < (this.targetY1 * -1); yVel++) {
+        //     for (let i = 0; i < possibleHighLobbedXVelocities.length; i++) {
+        //         const xVel = possibleHighLobbedXVelocities[i];
+        //         const firingSolution = this.simulateFiringSolution(xVel, yVel);
 
-                if (firingSolution.hitsTarget) {
-                    possibleVelocities.push({x: xVel, y: yVel});
-                }
-            }
-        }
+        //         if (firingSolution.hitsTarget) {
+        //             console.log({x: xVel, y: yVel});
+        //             possibleVelocities.push({x: xVel, y: yVel});
+        //         }
+        //     }
+        // }
 
         // Find barely lobbed velocities:
-        for (let yVel = 0; yVel <= 2; yVel++) {
+        // for (let yVel = 0; yVel <= 2; yVel++) {
+        //     for (let xVel = 1; xVel < this.targetX2; xVel++) {
+        //         if (this.simulateFiringSolution(xVel, yVel).hitsTarget) {
+        //             possibleVelocities.push({x: xVel, y: yVel});
+        //         }
+        //     }
+        // }
+
+        const highestPossibleOption = this.findHighestSuccessfulFiringSolution();
+
+        for (let yVel = 0; yVel <= highestPossibleOption.yVel; yVel++) {
             for (let xVel = 1; xVel < this.targetX2; xVel++) {
                 if (this.simulateFiringSolution(xVel, yVel).hitsTarget) {
                     possibleVelocities.push({x: xVel, y: yVel});
                 }
             }
         }
+
+
 
         // dedup
         let possibleVelocitiesMap = new Map();

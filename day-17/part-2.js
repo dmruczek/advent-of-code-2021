@@ -3,4 +3,5 @@ const probeLauncherTrajectoryAnalyzer = new ProbeLauncherTrajectoryAnalyzer();
 probeLauncherTrajectoryAnalyzer.loadInput('input.txt');
 
 console.log(probeLauncherTrajectoryAnalyzer.findAllSuccessfullFiringSolutions().length);
-// latest try gave 1788, which is too low.
+// first try gave 1788, which is too low.
+// then got 1795, which is also too low.
