@@ -52,17 +52,6 @@ describe('ProbeLauncherTrajectoryAnalyzer', function () {
                 hitsTarget: false,
                 maxHeight: 0
             });
-
-            // console.log('\n');
-            // probeLauncherTrajectoryAnalyzer.printFiringSolution(probeLauncherTrajectoryAnalyzer.simulateFiringSolution(9,0));
-            // console.log('\n');
-            // probeLauncherTrajectoryAnalyzer.printFiringSolution(probeLauncherTrajectoryAnalyzer.simulateFiringSolution(17,-4));
-            // console.log('\n');
-
-            // console.log('\n');
-            // probeLauncherTrajectoryAnalyzer.printFiringSolution(probeLauncherTrajectoryAnalyzer.simulateFiringSolution(6,9));
-            // console.log('\n');
-            
             
         });
     });
@@ -229,10 +218,5 @@ describe('ProbeLauncherTrajectoryAnalyzer', function () {
 
         });
     });
-
-    
-    
-
-
     
 });

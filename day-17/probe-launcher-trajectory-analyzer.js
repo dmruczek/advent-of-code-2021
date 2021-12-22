@@ -66,8 +66,6 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
                 }
             }
         }
-        // console.log('best: ');
-        // console.log(bestFiringSolution);
         return bestFiringSolution;
     }
 
@@ -92,10 +90,13 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
             let yCandidate = workingY;
             
             while (Math.abs(xCandidate) > 1 && Math.abs(yCandidate) > 1) {
-                xCandidate = (workingX + (divisor)) / divisor;
-                yCandidate = (workingY + (divisor)) / divisor;
+                let adj = 0;
+                for (let i = 1; i < divisor; i++) {
+                    adj += i;
+                }
 
-                // console.log('checking ' + i + ', divisor: ' + divisor + `x:${xCandidate}, y:${yCandidate}`);
+                xCandidate = (workingX + (adj)) / divisor;
+                yCandidate = (workingY + (adj)) / divisor;
 
                 if (Number.isInteger(xCandidate) && Number.isInteger(yCandidate) && this.simulateFiringSolution(xCandidate, yCandidate).hitsTarget) {
                     possibleVelocities.push({x: xCandidate, y: yCandidate});
@@ -103,29 +104,6 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
                 divisor++;
             }
         }
-
-        // Find high lobbed velocities:
-        // let possibleHighLobbedXVelocities = this.getPossibleHighLobbedXVelocities();
-        // for (let yVel = 0; yVel < (this.targetY1 * -1); yVel++) {
-        //     for (let i = 0; i < possibleHighLobbedXVelocities.length; i++) {
-        //         const xVel = possibleHighLobbedXVelocities[i];
-        //         const firingSolution = this.simulateFiringSolution(xVel, yVel);
-
-        //         if (firingSolution.hitsTarget) {
-        //             console.log({x: xVel, y: yVel});
-        //             possibleVelocities.push({x: xVel, y: yVel});
-        //         }
-        //     }
-        // }
-
-        // Find barely lobbed velocities:
-        // for (let yVel = 0; yVel <= 2; yVel++) {
-        //     for (let xVel = 1; xVel < this.targetX2; xVel++) {
-        //         if (this.simulateFiringSolution(xVel, yVel).hitsTarget) {
-        //             possibleVelocities.push({x: xVel, y: yVel});
-        //         }
-        //     }
-        // }
 
         const highestPossibleOption = this.findHighestSuccessfulFiringSolution();
 
@@ -137,8 +115,6 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
             }
         }
 
-
-
         // dedup
         let possibleVelocitiesMap = new Map();
         for (let i = 0; i < possibleVelocities.length; i++) {
@@ -148,9 +124,6 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
         for (const velocity of possibleVelocitiesMap.values()) {
             possibleVelocities.push(velocity);
         }
-
-        // console.log('Found velocities: ');
-        // console.log(possibleVelocities);
 
         return possibleVelocities;
     }
@@ -199,62 +172,57 @@ module.exports = class ProbeLauncherTrajectoryAnalyzer {
         return true;
     }
 
-    printFiringSolution(firingSolution) {
-        let minX = 0, minY = this.targetY1, maxX = this.targetX2, maxY = 0;
+    // printFiringSolution(firingSolution) {
+    //     let minX = 0, minY = this.targetY1, maxX = this.targetX2, maxY = 0;
 
-        for (let i = 0; i < firingSolution.positionTracker.length; i++) {
-            const thisPos = firingSolution.positionTracker[i];
-            if (thisPos.x < minX) {
-                minX = thisPos.x;
-            } else if (thisPos.x > maxX) {
-                maxX = thisPos.x;
-            }
-            if (thisPos.y < minY) {
-                minY = thisPos.y;
-            } else if (thisPos.y > maxY) {
-                maxY = thisPos.y;
-            }
+    //     for (let i = 0; i < firingSolution.positionTracker.length; i++) {
+    //         const thisPos = firingSolution.positionTracker[i];
+    //         if (thisPos.x < minX) {
+    //             minX = thisPos.x;
+    //         } else if (thisPos.x > maxX) {
+    //             maxX = thisPos.x;
+    //         }
+    //         if (thisPos.y < minY) {
+    //             minY = thisPos.y;
+    //         } else if (thisPos.y > maxY) {
+    //             maxY = thisPos.y;
+    //         }
             
-        }
+    //     }
 
-        const height = (maxY - minY) + 1;
-        const width = (maxX - minX) + 1;
+    //     const height = (maxY - minY) + 1;
+    //     const width = (maxX - minX) + 1;
 
-        let matrix = [];
-        for (let i = 0; i < height; i++) {
-            matrix.push(Array(width));
-            matrix[i].fill('.');
-        }
+    //     let matrix = [];
+    //     for (let i = 0; i < height; i++) {
+    //         matrix.push(Array(width));
+    //         matrix[i].fill('.');
+    //     }
 
-        // console.log(`height:${height}, width:${width}`);
-        // console.log(`minX:${minX}, maxX:${maxX}, minY:${minY}, maxY:${maxY}`);
+    //     for (let y = this.targetY1; y <= this.targetY2; y++) {
+    //         for (let x = this.targetX1; x <= this.targetX2; x++) {
+    //             const yToUse = this.adjustYForMapping(y, maxY);
+    //             matrix[yToUse][x] = 'T';
+    //         }
+    //     }
 
+    //     for (let i = 0; i < firingSolution.positionTracker.length; i++) {
+    //         const yToUse = this.adjustYForMapping(firingSolution.positionTracker[i].y, maxY);
+    //         matrix[yToUse][firingSolution.positionTracker[i].x] = '#';
+    //     }
 
-        for (let y = this.targetY1; y <= this.targetY2; y++) {
-            for (let x = this.targetX1; x <= this.targetX2; x++) {
-                const yToUse = this.adjustYForMapping(y, maxY);
-                // console.log(`translating point x:${x}, y:${y}...  setting target at x:${x}, y:${yToUse}`);
-                matrix[yToUse][x] = 'T';
-            }
-        }
+    //     for (let y = 0; y < matrix.length; y++) {
+    //         let str = '';
+    //         for (let x = 0; x < matrix[y].length; x++) {
+    //             str += matrix[y][x];
+    //         }
+    //         console.log(str);
+    //     }
+    // }
 
-        for (let i = 0; i < firingSolution.positionTracker.length; i++) {
-            const yToUse = this.adjustYForMapping(firingSolution.positionTracker[i].y, maxY);
-            matrix[yToUse][firingSolution.positionTracker[i].x] = '#';
-        }
-
-        for (let y = 0; y < matrix.length; y++) {
-            let str = '';
-            for (let x = 0; x < matrix[y].length; x++) {
-                str += matrix[y][x];
-            }
-            console.log(str);
-        }
-    }
-
-    adjustYForMapping(y, maxY) {
-        return ((y * -1) + maxY);
-    }
+    // adjustYForMapping(y, maxY) {
+    //     return ((y * -1) + maxY);
+    // }
 
 
 };
